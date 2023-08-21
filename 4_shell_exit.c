@@ -27,12 +27,12 @@ char *search_executable(char *command)
 		if (access(executable_path, X_OK) == 0)
 		{
 			free(path_copy);
-			return strdup(executable_path);
+			return (strdup(executable_path));
 		}
 		dir = strtok(NULL, ":");
 	}
 	free(path_copy);
-	return NULL;
+	return (NULL);
 }
 /**
  * main - Entry point.
