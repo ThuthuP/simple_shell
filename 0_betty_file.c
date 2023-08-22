@@ -7,20 +7,16 @@ void fly_drone(void)
 {
 	const char *launch = "Drone launching!\n";
 	const char *landing = "Drone landing!\n";
+	pid_t child = fork();
 
 	write(STDOUT_FILENO, launch, strlen(launch));
 	sleep(4);
 	write(STDOUT_FILENO, landing, strlen(landing));
-}
 /**
  * main - Entry point.
  *
  * Return: 0 (success)
  */
-int main(void)
-{
-	pid_t child = fork();
-
 	if (child == -1)
 	{
 		perror("fork");
@@ -47,5 +43,5 @@ int main(void)
 		write(STDOUT_FILENO, "Flight completed.\n", strlen("Flight completed.\n"));
 	}
 	write(STDOUT_FILENO, "Exiting program.\n", strlen("Exiting program.\n"));
-	return (0);
+	return;
 }

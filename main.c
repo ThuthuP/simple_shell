@@ -9,8 +9,8 @@ int main(void)
 	char *input = NULL;
 	size_t input_size = 0;
 	ssize_t read_size;
-	pid_t child = fork();
-	char *args[2] = {input, NULL};
+	pid_t child;
+	char *args[2];
 	char error_message[] = "./hsh: No such file or directory\n";
 	int status;
 
@@ -27,6 +27,7 @@ int main(void)
 			break;
 		}
 		input[strcspn(input, "\n")] = '\0';
+		child = fork();
 		if (child == -1)
 		{
 			perror("fork");
@@ -34,6 +35,8 @@ int main(void)
 		}
 		else if (child == 0)
 		{
+			args[0] = input;
+			args[1] = NULL;
 			execve(input, args, NULL);
 			write(STDERR_FILENO, error_message, sizeof(error_message) - 1);
 			_exit(EXIT_FAILURE);
