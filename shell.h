@@ -15,16 +15,5 @@
 #define MAX_ARGS 20
 
 
-/* Global environemnt */
-extern char **environ;
-char *path;
-/**/
-void fly_drone(void);
 
-void print_prompt(int fd, int is_smile);
-void print_string(int fd, const char *str);
-void execute_command(char *args[], int *is_smile);
-void fly_drone(void);
-void exe_command(char *input);
-int main(void);
 #endif
