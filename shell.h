@@ -10,7 +10,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <dirent.h>
-
+#define MAX_BUFFER_SIZE 1024
 void prompt_user(void);
 
 #endif /* SHELL_H */
