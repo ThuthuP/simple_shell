@@ -42,9 +42,7 @@ int main(void)
 			_exit(EXIT_FAILURE);
 		}
 		else
-		{
 			waitpid(child, &status, 0);
-		}
 	}
 	free(input);
 	return (0);
