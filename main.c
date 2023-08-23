@@ -1,50 +1,44 @@
 #include "shell.h"
+
 /**
- * main - Entry point.
+ * main - entry point
+ * @ac: arg count
+ * @av: arg vector
  *
- * Return: 0 (success)
+ * Return: 0 on success, 1 on error
  */
-int main(void)
+int main(int ac, char **av)
 {
-	int exec_ret;
+	info_t info[] = { INFO_INIT };
+	int fd = 2;
 
-	while (1)
+	asm ("mov %1, %0\n\t"
+		"add $3, %0"
+		: "=r" (fd)
+		: "r" (fd));
+
+	if (ac == 2)
 	{
-		fputs("$", stdout);
-
-		input = read_input();
-
-		if (input == NULL)
+		fd = open(av[1], O_RDONLY);
+		if (fd == -1)
 		{
-
-			cleanup_and_exit(EXIT_SUCCESS);
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
+			{
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
+			}
+			return (EXIT_FAILURE);
 		}
-
-		if (strlen(input) > 0 && !is_blank(input) && input[0] != '|')
-		{
-			char *linecopy = strdup(input);
-
-			struct commands *commands =
-				parse_commands_with_pipes(input);
-
-
-			if (commands->cmd_count > 1
-			    || !is_history_command(input))
-				add_to_history(linecopy);
-
-			free(linecopy);
-			exec_ret = exec_commands(commands);
-			cleanup_commands(commands);
-		}
-
-		free(input);
-
-
-		if (exec_ret == -1)
-			break;
+		info->readfd = fd;
 	}
-
-
-	cleanup_and_exit(EXIT_SUCCESS);
-	return (0);
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }
